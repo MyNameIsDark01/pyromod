@@ -221,9 +221,14 @@ class MessageHandler:
 
     @patchable
     async def resolve_future(self, client, message, *args):
+        if message.chat.type == pyrogram.enums.ChatType.CHANNEL:
+            user = None
+        else:
+            user = message.from_user.id
+            
         listener_type = ListenerTypes.MESSAGE
         listener, identifier = client.match_listener(
-            (message.chat.id, message.from_user.id, message.id),
+            (message.chat.id, user, message.id),
             listener_type,
         )
         listener_does_match = False
