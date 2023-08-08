@@ -267,14 +267,17 @@ class CallbackQueryHandler:
 
         # managing unallowed user clicks
         if PyromodConfig.unallowed_click_alert:
-            permissive_listener = client.match_listener(
-                identifier_pattern=(
-                    query.message.chat.id,
-                    None,
-                    query.message.id,
-                ),
-                listener_type=ListenerTypes.CALLBACK_QUERY,
-            )[0]
+            try:
+                permissive_listener = client.match_listener(
+                    identifier_pattern=(
+                        query.message.chat.id,
+                        None,
+                        query.message.id,
+                    ),
+                    listener_type=ListenerTypes.CALLBACK_QUERY,
+                )[0]
+            except AttributeError:
+                permissive_listener = None
 
             if (permissive_listener and not listener) and permissive_listener[
                 "unallowed_click_alert"
